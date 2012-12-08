@@ -1,0 +1,40 @@
+#icon-report{
+    background: transparent url('../img/report-48.png') no-repeat 50% 50%;
+}
+
+#poststuff .inside{
+    margin:0pt; padding: 0pt;
+}
+
+.medblue{
+    color: #165882;
+    font-weight: 500;
+}
+
+.medorange{
+    color: #E66F00;
+    font-weight: 500;
+}
+
+.medgreen{
+    color: green;
+    font-weight: 500;
+}
+
+#opt_report_summary table .border-right{
+    border-right: 1px solid #DDD;
+    padding-right: 40px
+}
+
+#opt_report_summary table td{
+    font-family: "Georgia", serif;
+    font-size: 1.2em;
+    border: 0pt;
+    padding: 5px 20px 5px 5px;
+    text-align: right
+}
+
+#opt_report_summary .inside table{
+    padding: 20px;
+    background-color: transparent;
+}
