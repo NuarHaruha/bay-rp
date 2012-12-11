@@ -91,14 +91,10 @@ class report
 
 
     public function register_admin_scripts()
-    {
-
-    }
+    {}
 
     public function admin_scripts()
-    {
-
-    }
+    {}
 
     public function admin_footer_scripts()
     {
@@ -193,14 +189,14 @@ class report
     public function load_panel()
     {
         if (isset($_REQUEST['page'])){
+
             switch($_REQUEST['page']){
-                case 'report':
-                    require_once $this->plugin_path.'panels/main.php';
-                    break;
-                case 'report-cto':
-                    require_once $this->plugin_path.'panels/cto.php';
-                    break;
+                case 'report-cto':          $file = 'cto'; break;
+                case 'report-registration': $file = 'registration'; break;
+                case 'report': default:     $file = 'main'; break;
             }
+
+            require_once $this->plugin_path. sprintf('panels/%s.php', $file);
         }
     }
 }
