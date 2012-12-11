@@ -44,20 +44,18 @@ class report
 
     public function __construct()
     {
-        $this->plugin_uri   = plugin_dir_url(__FILE__);
-
-        $this->plugin_path  = plugin_dir_path(__FILE__);
-
-        $this->plugin_libs  = $this->plugin_path.'libs/';
-
-        $this->plugin_public_url = $this->plugin_uri.'public/';
-
         $this->_init();
     }
 
     private function _load_default_filesystem()
     {
-        $includes = array('type','query','metabox');
+        $this->plugin_uri           = plugin_dir_url(__FILE__);
+        $this->plugin_path          = plugin_dir_path(__FILE__);
+        $this->plugin_libs          = $this->plugin_path.'libs/';
+        $this->plugin_public_url    = $this->plugin_uri.'public/';
+
+        $includes = array('type','install','query','metabox');
+
         foreach($includes as $f){
             require $this->plugin_libs.$f.'.php';
         }
@@ -163,7 +161,7 @@ class report
 
         $this->_page_setup($this->page['payout']);
 
-        $title      = 'CTO';
+        $title      = 'Monthly CTO';
 
         $this->page['cto'] = add_submenu_page($this->slug, $title, $title, $this->cap,'report-cto', $callback);
 
@@ -186,6 +184,12 @@ class report
         add_meta_box('opt_report_summary','Sales Summary', 'mb_rp_sales_summary', $this->page['primary'],'normal','high');
     }
 
+    /**
+     * Include plugin page file
+     *
+     * @global string   $_REQUEST['page']   page now
+     * @return void
+     */
     public function load_panel()
     {
         if (isset($_REQUEST['page'])){
@@ -199,3 +203,9 @@ class report
 }
 
 new report();
+
+/**
+ * plugin setup installation, run once
+ */
+register_activation_hook( __FILE__ , 'mc_rp_setup');
+function mc_rp_setup(){  mc_rp_install_db();}
