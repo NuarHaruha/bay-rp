@@ -161,7 +161,7 @@ class report
 
         $this->_page_setup($this->page['payout']);
 
-        $title      = 'Monthly CTO';
+        $title      = 'Turnover';
 
         $this->page['cto'] = add_submenu_page($this->slug, $title, $title, $this->cap,'report-cto', $callback);
 
@@ -197,6 +197,9 @@ class report
                 case 'report':
                     require_once $this->plugin_path.'panels/main.php';
                     break;
+                case 'report-cto':
+                    require_once $this->plugin_path.'panels/cto.php';
+                    break;
             }
         }
     }
@@ -208,4 +211,4 @@ new report();
  * plugin setup installation, run once
  */
 register_activation_hook( __FILE__ , 'mc_rp_setup');
-function mc_rp_setup(){  mc_rp_install_db();}
+function mc_rp_setup(){ mc_rp_install_db();}
