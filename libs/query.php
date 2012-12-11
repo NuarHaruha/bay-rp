@@ -34,7 +34,7 @@ function sum_all_approved_sales_month(){
 
     $db = $wpdb->base_prefix.'mc_invoices';
 
-    $sql = "SELECT SUM(total_amount) FROM $db WHERE order_status='approved' AND created_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+    $sql = "SELECT SUM(total_amount) FROM $db WHERE order_status='approved' AND ".RPTYPE::CL_CURMONTH('created_date');
 
     return (int) $wpdb->get_var($sql);
 }
@@ -44,7 +44,7 @@ function sum_all_approved_orders_month(){
 
     $db = $wpdb->base_prefix.'mc_invoices';
 
-    $sql = "SELECT count(*) total FROM $db WHERE order_status='approved' AND created_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+    $sql = "SELECT count(*) total FROM $db WHERE order_status='approved' AND ".RPTYPE::CL_CURMONTH('created_date');
 
     return (int) $wpdb->get_var($sql);
 }
@@ -54,7 +54,7 @@ function sum_all_avg_orders_month(){
 
     $db = $wpdb->base_prefix.'mc_invoices';
 
-    $sql = "SELECT AVG(total_amount) total FROM $db WHERE created_date >= DATE_SUB(NOW(), INTERVAL 30 DAY) GROUP BY created_date";
+    $sql = "SELECT AVG(total_amount) total FROM $db WHERE ".RPTYPE::CL_CURMONTH('created_date');;
 
     return (int) $wpdb->get_var($sql);
 }
