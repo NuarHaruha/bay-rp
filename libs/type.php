@@ -9,7 +9,7 @@
  * @copyright   Copyright (C) 2012, Nuarharuha, MDAG Consultancy
  * @license     http://mdag.mit-license.org/ MIT License
  * @filesource  http://code.mdag.my/baydura_isralife/src
- * @version     1.0
+ * @version     1.1
  * @access      public
  */
 final class RPTYPE
@@ -18,7 +18,7 @@ final class RPTYPE
      * Database version
      * @var float
      * */
-    const DB_VERSION                        = 1.0;
+    const DB_VERSION                        = 1.1;
 
     /**
      * Table Report Sales
@@ -45,6 +45,12 @@ final class RPTYPE
     const DB_WITHDRAWAL                     = 'mc_rp_withdrawal';
 
     /**
+     * Product Invoice table
+     * @var string
+     */
+    const DB_INVOICE                        = 'mc_invoices';
+
+    /**
      * Database version meta key
      * @var string
      */
@@ -58,6 +64,8 @@ final class RPTYPE
     const SQL_FORMAT_WEEK_MONTH             = 'CEILING(DAYOFMONTH(%s)/7)';
 
     const SQL_MONTH_YEAR                    = 'DATE_FORMAT(%1$s,"%%m-%%y")=DATE_FORMAT(NOW(),"%%m-%%y")';
+
+    const SQL_PREFIX_VIEW                   = 'v_';
 
     public function __construct(){ return; }
 
@@ -90,5 +98,31 @@ final class RPTYPE
     public static function CL_CURMONTH($date_field)
     {
        return sprintf(self::SQL_MONTH_YEAR,$date_field);
+    }
+
+    public static function CR_VIEW($view_name, $args = array(
+                                    'table'     => 'wp_mc_invoices',
+                                    'options'   => array(
+                                        'status'    => 'approved',
+                                        'sum'       => false),
+                                    'col'       => array(
+                                        'date'      => 'created_date',
+                                        'status'    => 'order_status',
+                                        'amount'    => 'total_amount'
+                                    )
+    ))
+    {   global $wpdb;
+
+        $view   = self::SQL_PREFIX_VIEW.$view_name;
+        $table  = $args['table'];
+        $date   = sprintf('%s.%s', $args['table'], $args['col']['date']);
+        $ttl    = sprintf('%s.%s', $args['table'], $args['col']['amount']);
+        $status = sprintf('%s.%s', $args['table'], $args['col']['status']);
+        $type   = $args['options']['status'];
+        $ttl    = (!empty($args['options']['sum']) ) ? "SUM($ttl)" : $ttl;
+
+        $sql = "CREATE VIEW $view AS SELECT $date AS date, CEILING(DAYOFMONTH($date)/7) AS week_month, DATE_FORMAT($date,'%m-%y') AS month_year, $ttl AS amount FROM $table WHERE ($status = '$type')";
+
+        $wpdb->query($sql);
     }
 }
