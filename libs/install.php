@@ -19,6 +19,7 @@
  * @author  Nuarharuha <nhnoah+bay-isra@gmail.com>
  * @filesource https://github.com/NuarHaruha/bay-rp/blob/master/libs/install.php
  * @since   1.0
+ * @version 1.1
  * @return  mixed|array
  */
 function mc_rp_install_db(){
@@ -112,9 +113,26 @@ function mc_rp_install_db(){
 
         $update[] = dbDelta($sql);
 
+        mc_rp_create_view();
+
         add_option(RPTYPE::MK_DB_VERSION, RPTYPE::DB_VERSION);
     }
 
     return $update;
+}
+
+function mc_rp_create_view(){
+
+    $args = array(
+        'table'     => RPTYPE::DB(RPTYPE::DB_INVOICE),
+        'options'   => array('sum' => false, 'status' => 'approved'),
+        'col'       => array('date'=> 'created_date', 'status' => 'order_status', 'amount' => 'total_amount')
+    );
+
+    RPTYPE::CR_VIEW('approved_sales', $args);
+
+    $args['options']['status'] = 'pending';
+
+    RPTYPE::CR_VIEW('pending_sales', $args);
 }
 /** mc_rp_install_db() */
