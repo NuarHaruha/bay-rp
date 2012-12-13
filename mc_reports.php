@@ -54,7 +54,7 @@ class report
         $this->plugin_libs          = $this->plugin_path.'libs/';
         $this->plugin_public_url    = $this->plugin_uri.'public/';
 
-        $includes = array('type','install','query','metabox','registration');
+        $includes = array('type','install','query','metabox','registration','payout');
 
         foreach($includes as $f){
             require $this->plugin_libs.$f.'.php';
