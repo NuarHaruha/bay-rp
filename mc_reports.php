@@ -54,7 +54,7 @@ class report
         $this->plugin_libs          = $this->plugin_path.'libs/';
         $this->plugin_public_url    = $this->plugin_uri.'public/';
 
-        $includes = array('type','install','query','metabox');
+        $includes = array('type','install','query','metabox','registration');
 
         foreach($includes as $f){
             require $this->plugin_libs.$f.'.php';
@@ -170,12 +170,45 @@ class report
             case 'report':
                 $this->register_page_report_metabox();
                 break;
+            case 'report-registration':
+                $this->register_page_report_registration_metabox();
+                break;
         }
     }
 
-    public function register_page_report_metabox()
+    /**
+     * register metabox on report members registration page
+     *
+     * @see add_metabox()
+     * @uses add_metabox() WP function to create custom metabox
+     * @return void
+     */
+    public function register_page_report_registration_metabox()
     {
 
+        $total = array(
+                'users'     => mc_rp_get_all_users_count(),
+                'stockist'  => mc_rp_get_all_stockist_count() );
+        $month = array(
+                'users' => mc_rp_get_total_user_curmonth(),
+                'stockist' => mc_rp_get_total_stockist_curmonth() );
+        $args = array($total, $month);
+
+
+        add_meta_box('opt_report_register_summary','Summary', 'mb_rp_registration_summary',
+            $this->page['register'],'side','high', $args);
+        //
+    }
+
+    /**
+     * register metabox on report page
+     *
+     * @see add_metabox()
+     * @uses add_metabox() WP function to create custom metabox
+     * @return void
+     */
+    public function register_page_report_metabox()
+    {
         add_meta_box('opt_report_chart','Sales Chart', 'mc_sales_charts', $this->page['primary'],'normal','high');
         add_meta_box('opt_report_summary','Sales Summary', 'mb_rp_sales_summary', $this->page['primary'],'normal','high');
     }

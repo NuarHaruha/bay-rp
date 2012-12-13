@@ -1,7 +1,7 @@
 <?php do_action('registration_report_request', $_REQUEST);?>
 <div class="wrap report report-registration">
     <div id="icon-report" class="icon32"></div>
-    <h2 class="">Members Registration Report</h2>
+    <h2 class="">User Registration Report</h2>
     <?php settings_errors(); ?>
     <?php do_action('mc_notification', $_REQUEST);?>
     <form name="report-registration-form" method="post">
