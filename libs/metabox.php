@@ -8,10 +8,18 @@
  * @author      Nuarharuha <nhnoah+bay-isra@gmail.com>
  * @copyright   Copyright (C) 2012, Nuarharuha, MDAG Consultancy
  * @license     http://mdag.mit-license.org/ MIT License
- * @filesource  http://code.mdag.my/baydura_isralife/src
+ * @filesource  https://github.com/NuarHaruha/bay-rp/blob/master/libs/metabox.php
  * @version     1.0
  * @access      public
  */
+
+/**
+ * report payout metabox
+ */
+
+function mb_rp_payout_table(){
+
+}
 
 /**
  * report registration metabox

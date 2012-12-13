@@ -151,7 +151,7 @@ class report
 
         $this->_page_setup($this->page['register']);
 
-        $title      = 'Payout';
+        $title      = 'Bonus Payout';
 
         $this->page['payout'] = add_submenu_page($this->slug, $title, $title, $this->cap,'report-payout', $callback);
 
@@ -173,7 +173,23 @@ class report
             case 'report-registration':
                 $this->register_page_report_registration_metabox();
                 break;
+            case 'report-payout':
+                $this->register_page_report_payout_metabox();
+                break;
         }
+    }
+
+    /**
+     * register metabox on report members payout page
+     *
+     * @see add_metabox()
+     * @uses add_metabox() WP function to create custom metabox
+     * @return void
+     */
+    public function register_page_report_payout_metabox()
+    {
+        add_meta_box('opt_report_payout_tbl','Direct Bonus', 'mb_rp_payout_table',
+            $this->page['payout'],'normal','high');
     }
 
     /**
