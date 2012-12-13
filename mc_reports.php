@@ -197,7 +197,9 @@ class report
 
         add_meta_box('opt_report_register_summary','Summary', 'mb_rp_registration_summary',
             $this->page['register'],'side','high', $args);
-        //
+
+        add_meta_box('opt_report_register_chart','Registration Chart', 'mb_rp_registration_chart',
+            $this->page['register'],'normal','high');
     }
 
     /**

@@ -80,3 +80,73 @@ function mc_rp_get_total_stockist_curmonth(){
     unset($users);
     return $count;
 }
+
+/**
+ * Monthly registration chart
+ * type: line chart
+ */
+function mc_rp_user_month_charts(){
+
+    $chart = new Highchart();
+
+    $chart->chart                   = array(
+                                        'renderTo'  => 'container-m',
+                                        'type'      => 'line');
+
+    $chart->title                   = array(
+                                        'text'      => 'Monthly Registration Statistics');
+
+    $chart->subtitle->text          = 'Isra\'life Members for '.date("Y");;
+    $chart->xAxis->categories       = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+    $chart->yAxis->title->text      = 'Members Registration';
+    $chart->tooltip->enabled        = true;
+    $chart->tooltip->crosshairs     = true;
+    $chart->tooltip->formatter      = new HighchartJsExpr("function() {
+                return '<b>'+ this.series.name +'</b><br/>'+
+                    this.x +': '+ this.y;
+            }");
+    $chart->plotOptions->line->dataLabels->enabled = true;
+    $chart->plotOptions->line->enableMouseTracking = true;
+    $chart->credits->enabled = false;
+
+    foreach(array('Members','Inactive','Stockist') as $series){
+        $chart->series[] = array('name' => $series,'data' => mc_rp_user_type($series));
+    }
+?>
+<div id="container-m"></div>
+<script type="text/javascript"><?php echo $chart->render("chart1"); ?></script>
+<?php
+}
+
+/**
+ *  get json type data series for Highchart
+ */
+function mc_rp_user_type($type){
+
+    $type = strtolower($type);
+    $meta = 'status_option_active';
+
+    switch ($type){
+        case 'active':      $meta = 'status_option_active'; break;
+        case 'inactive':    $meta = 'status_option_inactive'; break;
+        case 'stockist':    $meta = 'user_type_option_stokis'; break;
+    }
+
+    $months = mc_get_months_highchart();
+    $users  = ($type == 'members') ? get_users() : $users = get_users(array('meta_key'=> $meta));
+
+    if (has_count($users)){
+        foreach($users as $index => $user){
+            $date       = $user->user_registered;
+            $timestamp  = strtotime($date);
+            // is current year
+            if (date('Y', $timestamp) == date('Y')){
+                $user_month = date("M", $timestamp);
+                $months[$user_month]++;
+            }
+        }
+    }
+
+    $months = join(",",$months);
+    return new HighchartJsExpr("[".$months."]");
+}

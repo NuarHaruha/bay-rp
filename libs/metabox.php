@@ -17,6 +17,11 @@
  * report registration metabox
  */
 
+function mb_rp_registration_chart()
+{
+    mc_rp_user_month_charts();
+}
+
 function mb_rp_registration_summary($post, $options){
     unset($post);
     list($total, $month) = $options['args'];
