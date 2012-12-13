@@ -91,10 +91,14 @@ class report
 
 
     public function register_admin_scripts()
-    {}
+    {
+        wp_register_script('data-table', $this->plugin_public_url.'dtable.min.js',array('jquery'),false,true);
+    }
 
     public function admin_scripts()
-    {}
+    {
+        wp_enqueue_script('data-table');
+    }
 
     public function admin_footer_scripts()
     {
@@ -188,7 +192,7 @@ class report
      */
     public function register_page_report_payout_metabox()
     {
-        add_meta_box('opt_report_payout_tbl','Direct Bonus', 'mb_rp_payout_table',
+        add_meta_box('opt_report_payout_tbl','Registration Bonus', 'mb_rp_payout_table',
             $this->page['payout'],'normal','high');
     }
 
@@ -244,6 +248,7 @@ class report
             switch($_REQUEST['page']){
                 case 'report-cto':          $file = 'cto'; break;
                 case 'report-registration': $file = 'registration'; break;
+                case 'report-payout':       $file = 'payout'; break;
                 case 'report': default:     $file = 'main'; break;
             }
 
