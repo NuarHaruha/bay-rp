@@ -114,6 +114,7 @@ function mc_rp_install_db(){
         $update[] = dbDelta($sql);
 
         mc_rp_create_view();
+        fixes_bonus_date();
 
         add_option(RPTYPE::MK_DB_VERSION, RPTYPE::DB_VERSION);
     }

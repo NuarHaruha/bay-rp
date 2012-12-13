@@ -42,3 +42,90 @@
 .txt-right{
     text-align: right !important;
 }
+
+table.widefat{
+    clear:left;
+}
+
+/* data tables */
+
+#bonus-registration_filter{
+    float:right;
+    padding-bottom: 10px;
+}
+
+.dataTables_length,
+#bonus-registration_info{
+    float:left;
+}
+
+#bonus-registration_filter input{
+}
+
+/* product length select box*/
+#bonus-registration select{
+    width: 60px;
+}
+
+/* pagination wrapper */
+#bonus-registration_paginate{
+    padding-bottom: 5px;
+    width: 130px;
+    clear: right;
+    margin-left: auto;
+}
+
+/** link next; */
+#bonus-registration_next{
+    padding-right: 20px;
+}
+
+.dataTables_info{
+    padding: 10px 10px 0px;
+    clear:both;
+}
+
+.dataTables_paginate {
+    padding: 10px 10px 0px;
+}
+
+#bonus-registration_previous{
+    margin-right: 3px;
+}
+
+.button-link,
+.paging_two_button a{
+    padding: 2px 4px;
+    cursor: pointer;
+    background: #777;
+    color: #FFF;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #666;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+.button-link:hover,
+.paging_two_button a:hover{
+    background: #356094;
+    border: solid 1px #2A4E77;
+    text-decoration: none;
+}
+.button-link:active,
+.paging_two_button a:active{
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    background: #2E5481;
+    border: solid 1px #203E5F;
+}

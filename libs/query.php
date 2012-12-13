@@ -88,3 +88,28 @@ function sum_all_avg_orders(){
 
     return (int) $wpdb->get_var($sql);
 }
+
+
+function fixes_bonus_date(){
+    global $wpdb;
+
+    $db     = BTYPE::DB(BTYPE::DB_PRIMARY);
+
+    $sql    = "SELECT bonus_id id, timestamp FROM $db WHERE date='0000-00-00 00:00:00'";
+
+    $bonus = $wpdb->get_results($sql);
+
+    if ($bonus){
+        foreach($bonus as $i=>$b){
+
+            $date = date('Y-m-d H:i:s',$b->timestamp);
+
+            $wpdb->update( $db, array(
+                'date' => $date
+            ), array(
+                'bonus_id' => $b->id
+            ), array('%s'), array('%d') );
+        }
+    }
+
+}

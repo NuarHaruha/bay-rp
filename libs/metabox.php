@@ -19,6 +19,63 @@
 
 function mb_rp_payout_table(){
 
+    $payout = get_curmonth_registration_bonus();
+    $ttl_amount = 0;
+    if ($payout){
+      //var_dump($payout);
+    }
+?>
+<table id="bonus-registration" class="widefat">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($payout): ?>
+        <?php $cnt = 1; ?>
+        <?php foreach($payout as $i=> $bonus): ?>
+        <tr>
+            <td><?php echo $cnt; ?></td>
+            <td><?php echo date('M d Y',$bonus->timestamp);?></td>
+            <td><?php echo uinfo($bonus->bonus_uid). ' ('.uinfo($bonus->bonus_uid,'code').')';?></td>
+            <td><?php echo $bonus->bonus_title;?></td>
+            <td>RM <?php echo mc_currency_filter( (int) $bonus->bonus_value); ?></td>
+        </tr>
+        <?php $cnt++; ?>
+        <?php $ttl_amount += (int) $bonus->bonus_value; ?>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <tr>
+            <td>Sorry, there is no active transaction for this month.</td>
+        </tr>
+        <?php endif; ?>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3"></th>
+            <th class="txt-right">Total</th>
+            <?php if (!$payout): ?>
+            <th>RM 0.00</th>
+            <?php else: ?>
+            <th>RM <?php echo mc_currency_filter($ttl_amount); ?></th>
+            <?php endif; ?>
+        </tr>
+    </tfoot>
+</table>
+<?php if($payout): ?>
+<script>
+    jQuery('document').ready(function($){
+        $('#bonus-registration').dataTable();
+
+    });
+</script>
+<?php endif; ?>
+<?php
 }
 
 /**
