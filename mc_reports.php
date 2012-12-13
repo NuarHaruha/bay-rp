@@ -54,7 +54,7 @@ class report
         $this->plugin_libs          = $this->plugin_path.'libs/';
         $this->plugin_public_url    = $this->plugin_uri.'public/';
 
-        $includes = array('type','install','query','metabox','registration','payout');
+        $includes = array('type','install','query','metabox','registration','payout','cto');
 
         foreach($includes as $f){
             require $this->plugin_libs.$f.'.php';
@@ -180,7 +180,27 @@ class report
             case 'report-payout':
                 $this->register_page_report_payout_metabox();
                 break;
+            case 'report-cto':
+                $this->register_page_report_cto_metabox();
+                break;
         }
+    }
+
+    /**
+     * register metabox on report members cto page
+     *
+     * @see add_metabox()
+     * @uses add_metabox() WP function to create custom metabox
+     * @return void
+     */
+    public function register_page_report_cto_metabox()
+    {
+        $date = date("M Y");
+        add_meta_box('opt_report_cto_tbl','Sales Summary for the month of '.$date, 'mb_rp_cto_summary',
+            $this->page['cto'],'normal','high');
+
+        add_meta_box('opt_report_cto_expense','Expenses Summary for the month of '.$date, 'mb_rp_cto_expense_summary',
+            $this->page['cto'],'normal','high');
     }
 
     /**
