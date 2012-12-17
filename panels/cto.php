@@ -1,7 +1,7 @@
 <?php do_action('cto_report_request', $_REQUEST);?>
 <div class="wrap report report-cto">
     <div id="icon-report" class="icon32"></div>
-    <h2 class="">Sales Report</h2>
+    <h2 class="">Monthly Company Turnover</h2>
     <?php settings_errors(); ?>
     <?php do_action('mc_notification', $_REQUEST);?>
     <form name="report-cto-form" method="post">
@@ -12,9 +12,11 @@
         wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
         <div id="poststuff">
             <div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
+                <!--
                 <div id="post-body-content">
                     <?php do_action('cto_report_content', $_REQUEST); ?>
                 </div>
+                -->
                 <div id="postbox-container-1" class="postbox-container">
                     <?php do_meta_boxes('','side',null); ?>
                 </div>
