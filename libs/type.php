@@ -67,6 +67,16 @@ final class RPTYPE
 
     const SQL_PREFIX_VIEW                   = 'v_';
 
+    /**
+     * shared cto amount
+     * @var int
+     */
+    const SHARED_CTO                        = 12;
+
+    const SHARED_CTO_STOCKIST               = 4;
+
+    const SHARED_CTO_LEADERS                = 8;
+
     public function __construct(){ return; }
 
     /**
