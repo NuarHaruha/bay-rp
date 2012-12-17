@@ -31,7 +31,7 @@ function get_sales_turnover_curmonth(){
     return $turnover;
 }
 
-function get_expenses_curmonth(){
+function get_sales_expenses_curmonth(){
 
     /* meta key suffix */
     $mk_date        = date("m-y");
@@ -134,6 +134,77 @@ function get_expenses_curmonth(){
     unset($registration, $stockist, $group_pv, $user_pv_sum, $total_expense);
 
     return _obj($expenses);
+}
+
+function get_sales_shared_cto_curmonth(){
+
+    $mk_date = date("m-y");
+    $cto = array();
+
+    $expenses       = (float) get_option('expenses-'.$mk_date, 0);
+    $turnover       = (float) get_option('turnover-'.$mk_date, 0);
+    $gross          = ($turnover - $expenses);
+
+    $cto['total']   = (($gross * RPTYPE::SHARED_CTO) / 100);
+
+    update_option('balance-'.$mk_date, $gross);
+    update_option('cto-'.$mk_date, $cto['total']);
+
+    $cto_stockists       = (($gross * RPTYPE::SHARED_CTO_STOCKIST) / 100);
+
+    $stockist = array(
+        'amount'    => $cto_stockists,
+        /**
+         *  @todo store rates options
+         */
+        'rates'     => array(
+            'state'     => 1,
+            'district'  => 3,
+            'mobile'    => 0
+        ),
+        'shared'    => array(
+            'state'         => 0,
+            'district'      => 0,
+            'mobile'        => 0
+         )
+    );
+
+    $stockist['shared']['state']     = (($stockist['rates']['state'] / RPTYPE::SHARED_CTO_STOCKIST) * $cto_stockists);
+    $stockist['shared']['district']  = (($stockist['rates']['district'] / RPTYPE::SHARED_CTO_STOCKIST) * $cto_stockists);
+    $stockist['shared']['mobile']    = 0;
+
+    $cto['stockist'] = $stockist;
+
+    $cto_leaders        = (($gross * RPTYPE::SHARED_CTO_LEADERS) / 100);
+
+    $leaders = array(
+        'amount'    => $cto_leaders,
+        /**
+         *  @todo store rates options
+         *  @var int actual percentage
+         */
+        'rates'     => array(
+            'p'     => 0, // pengurus
+            'pp'    => 3, // pengurus perak
+            'pe'    => 2, // pengurus emas
+            'pb'    => 3  // pengurus berlian
+        ),
+        'shared'    => array(
+            'p'     => 0,
+            'pp'    => 0,
+            'pe'    => 0,
+            'pb'    => 0
+        )
+    );
+
+    $leaders['shared']['p']  = 0;
+    $leaders['shared']['pp'] = (($leaders['rates']['pp'] / RPTYPE::SHARED_CTO_LEADERS) * $cto_leaders);
+    $leaders['shared']['pe'] = (($leaders['rates']['pe'] / RPTYPE::SHARED_CTO_LEADERS) * $cto_leaders);
+    $leaders['shared']['pb'] = (($leaders['rates']['pb'] / RPTYPE::SHARED_CTO_LEADERS) * $cto_leaders);
+
+    $cto['leaders'] = $leaders;
+
+    return _obj($cto);
 }
 
 function get_total_registration_bonus_count_curmonth(){
