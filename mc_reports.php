@@ -195,12 +195,26 @@ class report
      */
     public function register_page_report_cto_metabox()
     {
-        $date = date("M Y");
-        add_meta_box('opt_report_cto_tbl','Sales Summary for the month of '.$date, 'mb_rp_cto_summary',
+
+        /* date of current month */
+        $date           = date("M Y");
+
+        $args = array(
+            get_sales_turnover_curmonth(),  // turnover data
+            get_expenses_curmonth()         // expenses
+        );
+
+        add_meta_box('opt_report_cto_tbl','Sales Turnover for the month of '.$date, 'mb_rp_cto_summary',
+            $this->page['cto'],'normal','high', $args);
+
+        add_meta_box('opt_report_cto_expense','Expenses for the month of '.$date, 'mb_rp_expenses_summary',
+            $this->page['cto'],'normal','high', $args);
+
+        add_meta_box('opt_report_cto_expense_summary','Shared CTO Summary for the month of '.$date, 'mb_rp_expense_cto_summary',
             $this->page['cto'],'normal','high');
 
-        add_meta_box('opt_report_cto_expense','Expenses Summary for the month of '.$date, 'mb_rp_cto_expense_summary',
-            $this->page['cto'],'normal','high');
+        add_meta_box('opt_report_summary','Total Summary', 'mb_rp_cto_amount_summary',
+            $this->page['cto'],'side','high', $args);
     }
 
     /**
