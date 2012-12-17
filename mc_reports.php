@@ -98,6 +98,7 @@ class report
     public function admin_scripts()
     {
         wp_enqueue_script('data-table');
+        wp_enqueue_script('jqprint');
     }
 
     public function admin_footer_scripts()
@@ -201,7 +202,8 @@ class report
 
         $args = array(
             get_sales_turnover_curmonth(),  // turnover data
-            get_expenses_curmonth()         // expenses
+            get_sales_expenses_curmonth(),  // expenses
+            get_sales_shared_cto_curmonth() // shared cto
         );
 
         add_meta_box('opt_report_cto_tbl','Sales Turnover for the month of '.$date, 'mb_rp_cto_summary',
@@ -211,7 +213,7 @@ class report
             $this->page['cto'],'normal','high', $args);
 
         add_meta_box('opt_report_cto_expense_summary','Shared CTO Summary for the month of '.$date, 'mb_rp_expense_cto_summary',
-            $this->page['cto'],'normal','high');
+            $this->page['cto'],'normal','high', $args);
 
         add_meta_box('opt_report_summary','Total Summary', 'mb_rp_cto_amount_summary',
             $this->page['cto'],'side','high', $args);
