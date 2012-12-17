@@ -14,14 +14,19 @@
  */
 
 /**
- * report cto metabox
+ * Sales Summary
  */
 
-function mb_rp_cto_amount_summary(){
-    $expenses   = (float) get_option('expenses-'.date("m-y"), 0);
-    $turnover   = (float) get_option('turnover-'.date("m-y"), 0);
-    $balance    = (float) get_option('balance-'.date("m-y"),0);
-    $cto        = (float) get_option('cto-'.date("m-y"), 0);
+function mb_rp_cto_amount_summary($placeholder, $options){
+
+    unset($placeholder, $options);
+
+    $mk_date = date("m-y");
+
+    $expenses   = (float) get_option('expenses-'.$mk_date, 0);
+    $turnover   = (float) get_option('turnover-'.$mk_date, 0);
+    $balance    = (float) get_option('balance-'.$mk_date,0);
+    $cto        = (float) get_option('cto-'.$mk_date, 0);
     $netprofit  = ($balance - $cto);
 ?>
 <table class="widefat sales-summary">
@@ -52,46 +57,37 @@ function mb_rp_cto_amount_summary(){
     </tr>
     </tbody>
 </table>
+<table class="widefat" style="padding:0pt">
+    <tfoot>
+    <tr>
+        <th colspan="2">
+            <button class="button-secondary go-print">Print</button>
+        </th>
+    </tr>
+    </tfoot>
+</table>
+<script>
+    jQuery(document).ready(function($){
+        $('.go-print').click(function(e){
+            e.preventDefault();
+            $('#poststuff').jqprint();
+        })
+    });
+</script>
 <?php
 }
 
+/**
+ * Report Sales Shared CTO summary
+ */
 function mb_rp_expense_cto_summary($placeholder, $options){
 
-    $register_sum = get_total_registration_bonus_sum_curmonth();
+    list($turnover, $expenses, $cto) = $options['args'];
 
-    $stockist = array(
-        'count' => array(
-            'state'       => get_stockist_count('state'),
-            'district'    => get_stockist_count('district'),
-            'mobile'      => get_stockist_count('mobile')
-        )
-    );
+    unset($placeholder, $options, $turnover);
 
-
-    $stockist = foreach_push(new stdClass(), $stockist);
-
-
-    $expenses = (float) get_option('expenses-'.date("m-y"), 0);
-    $turnover = (float) get_option('turnover-'.date("m-y"), 0);
-
-    $balance  = ($turnover - $expenses);
-
-    $cto = (($balance * 12) / 100);
-
-    update_option('balance-'.date("m-y"), $balance);
-    update_option('cto-'.date("m-y"), $cto);
-
-    $stockist = (($balance * 4) / 100);
-    $leader = (($balance * 8) / 100);
-
-    $state = ((1 / 4) * $stockist);
-    $district = ((3 / 4) * $stockist);
-
-    $pp = ((3 / 8) * $leader);
-    $pe = ((2 / 8) * $leader);
-    $pb = ((3 / 8) * $leader);
-
-    ?>
+    $stockist = $expenses->stockist;
+?>
 <table class="widefat">
     <thead>
     <tr>
@@ -103,58 +99,58 @@ function mb_rp_expense_cto_summary($placeholder, $options){
     </thead>
     <tbody>
     <tr>
-        <th scope="row"><small>1.</small> Stockist 4%</th>
+        <th scope="row"><small>1.</small> <strong>Stockist 4%</strong></th>
         <td></td>
         <td></td>
-        <td>RM <?php echo mc_currency_filter($stockist);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->stockist->amount);?></td>
     </tr>
     <tr>
-        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count['state'];?></span> State Stockist</th>
+        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count->state ;?></span> State Stockist</th>
         <td>1%</td>
-        <td>RM <?php echo mc_currency_filter($state);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->stockist->shared->state);?></td>
         <td></td>
     </tr>
     <tr>
-        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count['district'];?></span> District Stockist</th>
+        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count->district;?></span> District Stockist</th>
 
         <td>3%</td>
-        <td>RM <?php echo mc_currency_filter($district);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->stockist->shared->district);?></td>
         <td></td>
     </tr>
     <tr>
-        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count['mobile'];?></span> Mobile Stockist</th>
+        <th scope="row">&mdash; <span class="medblue"><?php echo $stockist->count->mobile;?></span> Mobile Stockist</th>
         <td>0%</td>
-        <td>RM 0.00</td>
+        <td>RM <?php echo mc_currency_filter($cto->stockist->shared->mobile);?></td>
         <td></td>
     </tr>
     <tr>
-        <th scope="row"><small>2.</small> Leadership Bonus 8%</th>
+        <th scope="row"><small>2.</small> <strong>Leadership Bonus 8%</strong></th>
         <td></td>
         <td></td>
-        <td>RM <?php echo mc_currency_filter($leader);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->leaders->amount);?></td>
     </tr>
     <tr>
         <th scope="row">&mdash; Pengurus</th>
         <td>0%</td>
-        <td>RM 0.00</td>
+        <td>RM <?php echo mc_currency_filter($cto->leaders->shared->p);?></td>
         <td></td>
     </tr>
     <tr>
         <th scope="row">&mdash; Pengurus Perak</th>
         <td>3%</td>
-        <td>RM <?php echo mc_currency_filter($pp);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->leaders->shared->pp);?></td>
         <td></td>
     </tr>
     <tr>
         <th scope="row">&mdash; Pengurus Emas</th>
         <td>2%</td>
-        <td>RM <?php echo mc_currency_filter($pe);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->leaders->shared->pe);?></td>
         <td></td>
     </tr>
     <tr>
         <th scope="row">&mdash; Pengurus Berlian</th>
         <td>3%</td>
-        <td>RM <?php echo mc_currency_filter($pb);?></td>
+        <td>RM <?php echo mc_currency_filter($cto->leaders->shared->pb);?></td>
         <td></td>
     </tr>
     </tbody>
@@ -163,7 +159,7 @@ function mb_rp_expense_cto_summary($placeholder, $options){
         <th colspan="2">Total CTO 12%</th>
         <th></th>
         <th>
-            RM <?php echo mc_currency_filter($cto);?>
+            RM <?php echo mc_currency_filter($cto->total);?>
         </th>
     </tr>
     </tfoot>
@@ -182,6 +178,7 @@ function mb_rp_expenses_summary($placeholder, $options){
     unset($placeholder);
 
     list($turnover, $expenses) = $options['args'];
+    unset($options, $turnover);
 
     /** rates type
      *  @var string
@@ -201,12 +198,12 @@ function mb_rp_expenses_summary($placeholder, $options){
     </thead>
     <tbody>
     <!-- Begin expenses registration -->
-    <tr valign="top">
+    <tr valign="top" title="Members Registration Bonus">
         <th scope="row">
             <small>1.</small> <strong> Members Registration Bonus</strong>
         </th>
-        <td>
-            <?php echo $expenses->registration->count;?>
+        <td><a href="/wp-admin/admin.php?page=report-registration">
+            <?php echo $expenses->registration->count;?></a>
         </td>
         <td>
             RM <?php echo mc_currency_filter($expenses->registration->amount);?>
@@ -330,6 +327,9 @@ function mb_rp_expenses_summary($placeholder, $options){
 <?php
 }
 
+/**
+ *  Sales Turnover
+ */
 function mb_rp_cto_summary($placeholder, $options){
 
     /* $placeholder store post data, if within post-type page
@@ -338,6 +338,8 @@ function mb_rp_cto_summary($placeholder, $options){
     unset($placeholder);
 
     list($turnover) = $options['args'];
+    unset($options);
+
     $turnover = foreach_push(new stdClass(), $turnover);
 ?>
 <table class="widefat">
